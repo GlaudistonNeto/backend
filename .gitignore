@@ -1,5 +1,6 @@
 node_modules/
-src/database/connection.js
+knexfile.js
+migrations.rar
 npm-debug.*
 *.jks
 *.p8

@@ -1,21 +1,25 @@
 {
-  "name": "backend",
+  "name": "tchuhim",
   "version": "1.0.0",
-  "description": "backend",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/server"
-  },
-  "repository": "https://github.com/GlaudistonNeto/backend",
-  "author": "gneto",
   "license": "MIT",
-  "private": false,
-  "devDependencies": {
-    "nodemon": "^2.0.12"
+  "scripts": {
+    "dev": "nodemon"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "knex": "^0.95.10",
+    "moment": "^2.29.1",
     "mysql2": "^2.3.0",
-    "sequelize": "^6.6.5"
+    "node-schedule": "^2.0.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
