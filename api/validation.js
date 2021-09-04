@@ -24,5 +24,17 @@ module.exports = app => {
     if(typeof value === 'string' && !value.trim()) throw msg;
   }
 
-  return {existsOrError, notExistsOrError, equalsOrError}
+  function ageVerifications(value, msg) {
+    if (value < 18) throw msg;
+    if (Array.isArray(value) && value.length === 0) throw msg;
+    if(typeof value === 'integer' && !value.trim()) throw msg;
+  }
+
+  return {
+    existsOrError,
+    notExistsOrError,
+    equalsOrError,
+    strongPasswordOrError,
+    ageVerifications,
+  }
 }
