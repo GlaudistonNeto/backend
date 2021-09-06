@@ -1,25 +1,31 @@
-const bcrypt = require('../util/bcrypt');
+const { hash } = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 module.exports = app => {
   const {
     existsOrError,
     notExistsOrError,
     equalsOrError,
-    strongPasswordOrError,
-    ageVerification
+    ageVerification,
+    strongPassword
   } = app.api.validation;
+
+  const encryptPassword = password => {
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(password, salt);
+  }
+
   const save = async (req, res) => {
     const user = { ...req.body }
     if (req.params.id) user.id = req.params.id;
 
     try {
       existsOrError(user.name, 'Usuário não informado.')
-      ageVerification(user.age,
-        'Idade não aprovada, você precisa ter ao menos 18 anos.')
+      ageVerification(user.age, 'Idade menor que 18 anos.')
       existsOrError(user.city, 'Cidade não informada.')
       existsOrError(user.email, 'E-mail não informado.')
-      strongPasswordOrError(user.password, 'E-mail não informado.')
-      equalsOrError(user.confirmPassword, 'As senhas não conicidem.')
+      strongPassword(user.password, 'A senha precisa de ao menos 6 caracteres.')
+      existsOrError(user.confirmPassword, 'Confirme a senha!')
       equalsOrError(user.password, user.confirmPassword,
         'As senhas não conicidem.')
 
@@ -31,13 +37,13 @@ module.exports = app => {
       res.status(400).send(msg);
     }
 
-    user.password = bcrypt.generateHash(req.body.password);
+    user.password = encryptPassword(user.password);
     delete user.confirmPassword
 
     if (user.id) {
       app.db('users')
         .update(user)
-        .ehere({ id: user.id })
+        .where({ id: user.id })
         .then(_ => res.status(204).send())
         .catch(err => res.status(500).send(err))
     } else {
@@ -50,7 +56,7 @@ module.exports = app => {
 
   const get = (req, res) => {
     app.db('users')
-      .select('id', 'nsme', 'age', 'city', 'email')
+      .select('id', 'name', 'age', 'city', 'email')
       .then(users => res.json(users))
       .catch(err => res.status(500).send(err))
   }

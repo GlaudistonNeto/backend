@@ -2,7 +2,7 @@ module.exports = app => {
   function existsOrError(value, msg) {
     if (!value) throw msg;
     if (Array.isArray(value) && value.length === 0) throw msg;
-    if(typeof value === 'string' && !value.trim()) throw msg;
+    if (typeof value === 'string' && !value.trim()) throw msg;
   }
   
   function notExistsOrError(value, msg) {
@@ -17,24 +17,24 @@ module.exports = app => {
   function equalsOrError(valueA, valueB, msg) {
     if (valueA !== valueB) throw msg;
   }
-  
-  function strongPasswordOrError(value, msg) {
-    if (value <= 5 ) throw msg;
-    if (Array.isArray(value) && value.length === 0) throw msg;
-    if(typeof value === 'string' && !value.trim()) throw msg;
+
+  function ageVerification(value, msg) {
+    if (!value || value < 18) throw msg;
+    if (typeof value === 'int' && !value.trim()) throw msg;
   }
 
-  function ageVerifications(value, msg) {
-    if (value < 18) throw msg;
+  function strongPassword(value, msg) {
+    if (!value) throw msg;
     if (Array.isArray(value) && value.length === 0) throw msg;
-    if(typeof value === 'integer' && !value.trim()) throw msg;
+    if (typeof value === 'string' && !value.trim()) throw msg;
+    if (value.length < 6) throw msg;
   }
 
   return {
     existsOrError,
     notExistsOrError,
+    ageVerification,
+    strongPassword,
     equalsOrError,
-    strongPasswordOrError,
-    ageVerifications,
   }
 }

@@ -11,6 +11,7 @@ exports.up = function(knex) {
   table.timestamp('updatedAt')
   });
   };
+  
   exports.down = function(knex) {
   return knex.schema.dropTable('posts');
   };

@@ -1,6 +1,7 @@
 node_modules/
 knexfile.js
 migrations.rar
+tchuhim.rar
 npm-debug.*
 *.jks
 *.p8
