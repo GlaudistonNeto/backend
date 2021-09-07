@@ -61,5 +61,30 @@ module.exports = app => {
       .catch(err => res.status(500).send(err))
   }
 
-  return { save, get };
+  const getById = (req, res) => {
+    app.db('users')
+      .select('id', 'name', 'age', 'city', 'email')
+      .where({ id: req.params.id })
+      .first()
+      .then(user => res.json(user))
+      .catch(err => res.status(500).send(err))
+  }
+
+  const remove = async (req, res) => {
+    try {
+      existsOrError(eq.params.id, 'Código da postagem não encontrado.');
+      
+      const rowDeleted = await app.db('evaluations')
+        where({id: req.params.id}).del()
+      existsOrError(rowDeleted, 'Postagem não encontrada');
+
+      res.status(204).send();
+    } catch (msg) {
+      res.status(400).send(msg);
+    }
+
+  return { save, get, getById, remove };
+  }
+
+  return { save, get, getById };
 }
