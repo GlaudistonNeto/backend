@@ -72,19 +72,22 @@ module.exports = app => {
 
   const remove = async (req, res) => {
     try {
-      existsOrError(eq.params.id, 'Código da postagem não encontrado.');
-      
-      const rowDeleted = await app.db('evaluations')
-        where({id: req.params.id}).del()
-      existsOrError(rowDeleted, 'Postagem não encontrada');
+      const posts = await app.db('posts')
+        .where({ userId: req.params.id })
+      notExistsOrError('posts', 'Usuário possue postagens.')
+
+      const rowsUpdate = await app.db('users')
+        .update({ deletedAt: new Date() })
+        .where({ id: req.params.id })
+      existsOrError(rowsUpdate, 'Usuário não foi encontrado.')
 
       res.status(204).send();
     } catch (msg) {
       res.status(400).send(msg);
     }
 
-  return { save, get, getById, remove };
+  return { save, get, getById };
   }
 
-  return { save, get, getById };
+  return { save, get, getById, remove };
 }

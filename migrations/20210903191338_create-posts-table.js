@@ -8,6 +8,7 @@ exports.up = function(knex) {
   table.string('longitude').notNull()
   table.integer('userId').unsigned().notNullable()
     .references('id').inTable('users')
+  table.timestamp('deletedAt')
   });
   };
   

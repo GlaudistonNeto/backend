@@ -1,5 +1,5 @@
 module.exports = app => {
-  const { existsOrError } = app.api.validation;
+  const { existsOrError, notExistsOrError } = app.api.validation;
 
   const save = (req, res) => {
     const evaluation = { ...req.body };
@@ -44,11 +44,12 @@ module.exports = app => {
 
   const remove = async (req, res) => {
     try {
-      existsOrError(eq.params.id, 'Código da avaliação não encontrado.');
-      
-      const rowDeleted = await app.db('evaluations')
-        where({id: req.params.id}).del()
-      existsOrError(rowDeleted, 'Avaliação não encontrada');
+      const posts = await app.db('posts')
+        .where({ postId: req.params.id });
+      notExistsOrError(posts, 'Postagem possui avaliações');
+      const users = await app.db('users')
+        .where({ userId: req.params.id });
+      notExistsOrError(users, 'Usuário possui avaliações');
 
       res.status(204).send();
     } catch (msg) {

@@ -8,6 +8,7 @@ exports.up = function(knex) {
     .references('id').inTable('posts')
   table.integer('userId').unsigned().notNullable()
     .references('id').inTable('users')
+  table.timestamp('deletedAt')
   });
   };
   
