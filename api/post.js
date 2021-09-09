@@ -20,6 +20,7 @@ module.exports = app => {
       app.db('posts')
         .update(post)
         .where({ id: post.id })
+        .whereNull('deletedAt')
         .then(_ => res.status(204).send())
         .catch(err => res.status(500).send(err))
     } else {
@@ -33,6 +34,7 @@ module.exports = app => {
   const get = (req, res) => {
     app.db('posts')
       .select('description', 'image_url', 'latitude', 'longitude', 'postId')
+      .whereNull('deletedAt')
       .then(posts => res.json(posts))
       .catch(err => res.status(500).send(err))
   };
@@ -41,6 +43,7 @@ module.exports = app => {
     app.db('posts')
       .select('description', 'image_url', 'latitude', 'longitude', 'postId')
       .where({ id: req.params.id })
+      .whereNull('deletedAt')
       .first()
       .then(post => res.json(post))
       .catch(err => res.status(500).send(err))
@@ -48,9 +51,14 @@ module.exports = app => {
 
   const remove = async (req, res) => {
     try {
-      const users = await app.db('users')
-        .where({ userId: req.params.id });
-      notExistsOrError(users, 'Usuário possui postagens');
+      const posts = await app.db('posts')
+        .where({ evaluationId: req.params.id })
+      notExistsOrError(evaluation, 'Usuário possue postagens.')
+
+      const rowsUpdate = await app.db('evaluations')
+        .update({ deletedAt: new Date() })
+        .where({ id: req.params.id })
+      existsOrError(rowsUpdate, 'Postagem não foi encontrado.')
 
       res.status(204).send();
     } catch (msg) {

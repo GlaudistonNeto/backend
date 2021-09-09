@@ -44,6 +44,7 @@ module.exports = app => {
       app.db('users')
         .update(user)
         .where({ id: user.id })
+        .whereNull('deletedAt')
         .then(_ => res.status(204).send())
         .catch(err => res.status(500).send(err))
     } else {
@@ -57,6 +58,7 @@ module.exports = app => {
   const get = (req, res) => {
     app.db('users')
       .select('id', 'name', 'age', 'city', 'email')
+      .whereNull('deletedAt')
       .then(users => res.json(users))
       .catch(err => res.status(500).send(err))
   }
@@ -65,6 +67,7 @@ module.exports = app => {
     app.db('users')
       .select('id', 'name', 'age', 'city', 'email')
       .where({ id: req.params.id })
+      .whereNull('deletedAt')
       .first()
       .then(user => res.json(user))
       .catch(err => res.status(500).send(err))
@@ -74,7 +77,7 @@ module.exports = app => {
     try {
       const posts = await app.db('posts')
         .where({ userId: req.params.id })
-      notExistsOrError('posts', 'Usuário possue postagens.')
+      notExistsOrError(posts, 'Usuário possue postagens.')
 
       const rowsUpdate = await app.db('users')
         .update({ deletedAt: new Date() })
