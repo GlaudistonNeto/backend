@@ -27,13 +27,13 @@ module.exports = app => {
     }
   };
 
-  const get = (req, res) => {
-    app.db('evaluations')
-      .select('review', 'rate', 'userId', 'postId')
-      .whereNull('deletedAt')
-      .then(evaluations => res.json(evaluations))
-      .catch(err => res.status(500).send(err))
-  };
+  // const get = (req, res) => {
+  //   app.db('evaluations')
+  //     .select('review', 'rate', 'userId', 'postId')
+  //     .whereNull('deletedAt')
+  //     .then(evaluations => res.json(evaluations))
+  //     .catch(err => res.status(500).send(err))
+  // };
 
   const getById = (req, res) => {
     app.db('evaluations')

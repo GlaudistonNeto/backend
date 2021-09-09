@@ -28,7 +28,7 @@ module.exports = app => {
   app.route('/evaluations')
     .all(app.config.passport.authenticate())
     .post(app.api.evaluation.save)
-    .get(app.api.evaluation.get)
+    .get(app.api.evaluation.getById)
 
   app.route('/evaluations/:userId/:postId')
     .all(app.config.passport.authenticate())

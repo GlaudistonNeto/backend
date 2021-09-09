@@ -4,18 +4,18 @@ const bcrypt = require('bcrypt');
 
 module.exports = app => {
   const signin = async (req, res) => {
-    if(!req.body.email || !req.body.password) {
+    if (!req.body.email || !req.body.password) {
       return req.status(400).send('Informe usuário e senha corretamente.');
     }
 
     const user = await app.db('users')
-      .where({ where: req.body.email })
+      .where({ email: req.body.email })
       .first()
 
     if (!user) return res.status(400).send('Usuário não encontrádo.');
 
     const isMatch = bcrypt.compareSync(req.body.password, user.password);
-    if(!isMatch) return res.status(401).send('Email/Senha inválidos!');
+    if (!isMatch) return res.status(401).send('Email/Senha inválidos!');
 
     const now = Math.floor(Date.now() / 1000);
 
